@@ -23,7 +23,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 	buf := strings.Split(data, ",")
 
 	if len(buf) != 3 {
-		return 0, "", 0, errors.New("Неправильное количество данных")
+		return 0, "", 0, errors.New("incorrect amount of data")
 	}
 
 	steps, err1 := strconv.Atoi(buf[0])
@@ -33,7 +33,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 	}
 
 	if steps <= 0 {
-		return 0, "", 0, errors.New("Количество шагов не может быть отрицательным числом либо нулем")
+		return 0, "", 0, errors.New("the number of steps cannot be a negative number or zero")
 	}
 	typeActivity := buf[1]
 	durationActivity, err2 := time.ParseDuration(buf[2])
@@ -43,7 +43,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 	}
 
 	if durationActivity <= 0 {
-		return 0, "", 0, errors.New("Продолжительность активности не может быть отрицательным числом или нулем")
+		return 0, "", 0, errors.New("the duration of activity cannot be a negative number or zero")
 	}
 
 	return steps, typeActivity, durationActivity, nil
@@ -72,8 +72,17 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	// TODO: реализовать функцию
 	steps, typeActivity, durationActivity, err := parseTraining(data)
 
-	if err != nil || steps <= 0 || durationActivity <= 0 {
+	if err != nil {
 		log.Println(err)
+		return "", err
+	}
+
+	if steps <= 0 {
+		return "", errors.New("the number of steps cannot be a negative number or zero")
+	}
+
+	if durationActivity <= 0 {
+		return "", errors.New("the duration of activity cannot be a negative number or zero")
 	}
 
 	switch typeActivity {
@@ -82,7 +91,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 		speed := meanSpeed(steps, height, durationActivity)
 		calories, err := WalkingSpentCalories(steps, weight, height, durationActivity)
 		if err != nil {
-			return "", errors.New("Проблема")
+			return "", errors.New("problem")
 		}
 		return fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", typeActivity, durationActivity.Hours(), distance, speed, calories), nil
 	case "Бег":
@@ -100,8 +109,20 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	// TODO: реализовать функцию
-	if steps <= 0 || weight <= 0 || height <= 0 || duration <= 0 {
-		return 0, errors.New("Входные параметры некорректны")
+	if steps <= 0 {
+		return 0, errors.New("the number of steps cannot be a negative number or zero")
+	}
+
+	if weight <= 0 {
+		return 0, errors.New("the weight cannot be a negative number or zero")
+	}
+
+	if height <= 0 {
+		return 0, errors.New("height cannot be a negative number or zero")
+	}
+
+	if duration <= 0 {
+		return 0, errors.New("the running time cannot be a negative number or zero")
 	}
 
 	speed := meanSpeed(steps, height, duration)
@@ -113,8 +134,20 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	// TODO: реализовать функцию
-	if steps <= 0 || weight <= 0 || height <= 0 || duration <= 0 {
-		return 0, errors.New("Входные параметры некорректны")
+	if steps <= 0 {
+		return 0, errors.New("the number of steps cannot be a negative number or zero")
+	}
+
+	if weight <= 0 {
+		return 0, errors.New("the weight cannot be a negative number or zero")
+	}
+
+	if height <= 0 {
+		return 0, errors.New("height cannot be a negative number or zero")
+	}
+
+	if duration <= 0 {
+		return 0, errors.New("the running time cannot be a negative number or zero")
 	}
 
 	speed := meanSpeed(steps, height, duration)
